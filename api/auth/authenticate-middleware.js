@@ -1,14 +1,13 @@
 const bcrypt = require("bcryptjs"); /// <<<<<< install it and require it
 
-const Users = require("../users/users-model.js.js");
-
-module.exports = authenticate;
+const usersDB = require("../users/users-model");
 
 function authenticate(req, res, next) {
 	const { username, password } = req.headers;
 
 	// find the users in the DB
-	Users.findBy({ username })
+	usersDB
+		.findBy({ username })
 		.first()
 		.then(user => {
 			if (user && bcrypt.compareSync(password, user.password)) {
@@ -21,3 +20,5 @@ function authenticate(req, res, next) {
 			res.status(500).json(error);
 		});
 }
+
+module.exports = authenticate;
