@@ -1,25 +1,28 @@
 {
-	"name": "webauth-i-challenge",
+	"name": "webauth-ii-challenge",
 	"version": "1.0.0",
-	"description": "webauth-i-challenge",
+	"description": "webauth-ii-challenge",
 	"main": "index.js",
 	"scripts": {
 		"server": "nodemon index.js"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Labyrinth65/webauth-i-challenge.git"
+		"url": "git+https://github.com/Labyrinth65/webauth-ii-challenge.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/Labyrinth65/webauth-i-challenge/issues"
+		"url": "https://github.com/Labyrinth65/webauth-ii-challenge/issues"
 	},
-	"homepage": "https://github.com/Labyrinth65/webauth-i-challenge#readme",
+	"homepage": "https://github.com/Labyrinth65/webauth-ii-challenge#readme",
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
+		"connect-session-knex": "^1.4.0",
 		"cors": "^2.8.5",
+		"dotenv": "^8.0.0",
 		"express": "^4.17.1",
+		"express-session": "^1.16.2",
 		"helmet": "^3.19.0",
 		"knex": "^0.19.0",
 		"knex-cleaner": "^1.2.1",
