@@ -1,17 +1,18 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const usersDB = require("../users/users-model.js");
+const secrets = require("../config/secrets");
 
 // for endpoints beginning with /api/auth
 router.post("/register", async (req, res) => {
 	try {
 		const checkUser = await usersDB.findBy(req.body.username);
-		console.log(checkUser);
-		if (!req.body.username || !req.body.password) {
-			res
-				.status(400)
-				.json({ message: "please provide username and password." });
+		if (!req.body.username || !req.body.password || !req.body.department) {
+			res.status(400).json({
+				message: "please provide username, password, and department."
+			});
 		} else if (checkUser && req.body.username === checkUser.username) {
 			res.status(401).json({
 				message: "username is already in use, please provide another"
@@ -38,8 +39,9 @@ router.post("/login", async (req, res) => {
 		let { username, password } = req.body;
 		const user = await usersDB.findBy(username);
 		if (user && bcrypt.compareSync(password, user.password)) {
-			req.session.username = user.username; // 4 ******** add data to session
-			res.status(200).json({ message: `Welcome ${user.username}!` });
+			const token = generateToken(user);
+
+			res.status(200).json({ message: `Welcome ${user.username}!`, token });
 		} else {
 			res.status(401).json({ message: "Invalid Credentials" });
 		}
@@ -49,21 +51,18 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-router.get("/logout", (req, res) => {
-	if (req.session) {
-		// here we logout
-		req.session.destroy(err => {
-			if (err) {
-				res.status(500).json({
-					message: "something went wrong"
-				});
-			} else {
-				res.status(200).json({ message: "Logout successful" });
-			}
-		});
-	} else {
-		res.status(200).json({ message: "Logout successful" });
-	}
-});
+function generateToken(user) {
+	const jwtPayload = {
+		subject: user.id,
+		username: user.username,
+		department: user.department
+	};
+
+	const jwtOptions = {
+		expiresIn: "1d"
+	};
+
+	return jwt.sign(jwtPayload, secrets.jwtSecret, jwtOptions);
+}
 
 module.exports = router;
