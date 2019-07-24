@@ -1,16 +1,19 @@
 const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
 
 const userRouter = require("./users/users-router");
 const authRouter = require("./auth/auth-router.js");
-const setupGlobalMiddleware = require("./setup-middleware.js");
 
 const server = express();
 
 server.get("/", (req, res) => {
-	res.send(`<h2>WebAuth II Challenge</h2>`);
+	res.send(`<h2>WebAuth III Challenge</h2>`);
 });
 
-setupGlobalMiddleware(server);
+server.use(helmet());
+server.use(express.json());
+server.use(cors());
 
 server.use("/api/users", userRouter);
 server.use("/api/auth", authRouter);
